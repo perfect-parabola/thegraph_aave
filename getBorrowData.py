@@ -14,10 +14,13 @@ token_symbol = sys.argv[1]
 url = "https://api.thegraph.com/subgraphs/name/aave/protocol-v2"
 query = """{
     reserves(
-    first:1
-    symbol: %s
+        first:1
+        where:{
+            symbol: "%s"
+        }
     ) {
         id
+        name
     }
 }
 """ %(token_symbol)
@@ -25,6 +28,7 @@ r = requests.post(url, json={'query': query})
 json_data = json.loads(r.text)
 reserve_id = json_data.get('data').get('reserves')[0].get('id')
 print(reserve_id)
+print(json_data.get('data').get('reserves')[0].get('name'))
 
 query = """{
     borrows(
